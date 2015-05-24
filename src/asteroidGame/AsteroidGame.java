@@ -19,10 +19,8 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 	boolean paused; // True if the game is paused. Enter is the pause key
 	Shot[] shots;
 
-	RedSpawn spawnone;
-	BlueSpawn spawntwo;
-	GreenSpawn spawnthree;
-
+        Spawn spawnone, spawntwo, spawnthree;
+        
 	int numShots;
 
 	boolean shooting;
@@ -36,7 +34,7 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 	int level; //the current level number
 
 	public void init() {
-		resize(500, 500);
+		resize(900, 900);
 
 		shots = new Shot[41];
 		//41 is a shot's life period plus one.
@@ -73,9 +71,10 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 		ship = new Ship(250, 250, 0, .35, .98, .1, 12, new Color(250, 250, 250));
 		numShots = 0;
 
-		spawnone = new RedSpawn();
-		spawntwo = new BlueSpawn();
-		spawnthree = new GreenSpawn();
+		spawnone = new Spawn(100, 100, 40, Color.RED);
+		spawntwo = new Spawn(400, 100, 40, Color.BLUE);
+		spawnthree = new Spawn(250, 300, 40, Color.GREEN);
+                
 		//no shots on the screen at beginning of level
 		paused = false;
 		shooting = false;
@@ -96,7 +95,7 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 
 	public void paint(Graphics gfx) {
 		g.setColor(Color.black);
-		g.fillRect(0, 0, 500, 500);
+		g.fillRect(0, 0, 900, 900);
 
 		for (int i = 0; i < numShots; i++) //draw all the shots on the screen
                     shots[i].draw(g);
