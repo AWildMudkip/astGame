@@ -3,9 +3,7 @@ package asteroidGame;
 import java.awt.*;
 
 public class Spawn {
-    private final double x;
-    private final double y;
-    private final double radius;
+    private final double x, y, radius;
     private final Color color;
     
     public Spawn(double x, double y, double radius, Color color) {

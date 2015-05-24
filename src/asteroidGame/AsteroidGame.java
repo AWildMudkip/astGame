@@ -216,7 +216,7 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 	private void updateAsteroids() {
 		for (int i = 0; i < numAsteroids; i++) {
 			// move each asteroid
-			asteroids[i].move(dim.width, dim.height);
+			asteroids[i].move();
 			//check for collisions with the ship, restart the
 			//level if the ship gets hit
 			if (asteroids[i].shipCollision(ship)) {
