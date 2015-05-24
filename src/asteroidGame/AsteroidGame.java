@@ -58,7 +58,7 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 		// create a new, inactive ship centered on the screen
 		// I like .35 for acceleration, .98 for velocityDecay, and
 		// .1 for rotationalSpeed. They give the controls a nice feel.
-		ship = new Ship(250, 250, 0, .35, .98, .1, 12, new Color(250, 250, 250));
+		ship = new Ship(250, 250, 0, .35, .98, .1, 2, new Color(250, 250, 250));
 
 		spawnone = new Spawn(100, 100, 40, Color.RED);
 		spawntwo = new Spawn(400, 100, 40, Color.BLUE);
