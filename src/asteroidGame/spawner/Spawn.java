@@ -1,5 +1,6 @@
-package asteroidGame;
+package asteroidGame.spawner;
 
+import asteroidGame.entity.Ship;
 import java.awt.*;
 
 public class Spawn {

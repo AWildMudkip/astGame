@@ -1,4 +1,4 @@
-package asteroidGame;
+package asteroidGame.entity;
 
 public class Chaser extends Asteroid {
 	public Chaser(double x, double y, double radius, double minVelocity, double maxVelocity, int hitsLeft, int numSplit) {

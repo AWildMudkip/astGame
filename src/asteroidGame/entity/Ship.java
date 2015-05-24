@@ -1,4 +1,4 @@
-package asteroidGame;
+package asteroidGame.entity;
 
 import java.awt.*;
 

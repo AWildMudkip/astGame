@@ -1,5 +1,10 @@
 package asteroidGame;
 
+import asteroidGame.spawner.Spawn;
+import asteroidGame.entity.Shot;
+import asteroidGame.entity.Asteroid;
+import asteroidGame.entity.Ship;
+import asteroidGame.entity.Entity;
 import java.applet.*;
 import java.awt.*;
 import java.awt.event.*;
