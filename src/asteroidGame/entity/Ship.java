@@ -1,5 +1,6 @@
 package asteroidGame.entity;
 
+import asteroidGame.World;
 import java.awt.*;
 
 public class Ship extends Entity {
@@ -17,11 +18,11 @@ public class Ship extends Entity {
 	double acceleration, velocityDecay, rotationalSpeed;
 	boolean turningLeft, turningRight, accelerating, active;
 	int[] xPts, yPts, flameXPts, flameYPts;
-	int shotDelay, shotDelayLeft;
+	double shotDelay, shotDelayLeft;
 	Color reed;
 
 
-	public Ship(double x, double y, double angle, double acceleration, double velocityDecay, double rotationalSpeed, int shotDelay, Color col) {
+	public Ship(double x, double y, double angle, double acceleration, double velocityDecay, double rotationalSpeed, double shotDelay, Color col) {
 		super(x, y, angle, 6); // Radius is 6
 		
 		// Specific to the ship entity.
@@ -39,7 +40,7 @@ public class Ship extends Entity {
 		yPts = new int[4];
 		flameXPts = new int[3];
 		flameYPts = new int[3];
-		this.shotDelay = shotDelay; // # of frames between shots
+		this.shotDelay = shotDelay * World.fps; // Shots per second.
 		shotDelayLeft = 0; // ready to shoot
 		reed = col;
 	}
@@ -141,10 +142,10 @@ public class Ship extends Entity {
 			return true;
 	}
 	public Shot shoot() {
-		shotDelayLeft = shotDelay; //set delay till next shot can be fired
-		//a life of 40 makes the shot travel about the width of the
-		//screen before disappearing
-		return new Shot(x, y, angle, xVelocity, yVelocity, 40, reed);
+		shotDelayLeft = shotDelay; 
+		
+		// Life in seconds.
+		return new Shot(x, y, angle, xVelocity, yVelocity, 5, reed);
 	}
 
 }

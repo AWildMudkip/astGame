@@ -1,13 +1,14 @@
 package asteroidGame.entity;
 
+import asteroidGame.World;
 import java.awt.*;
 
 public class Shot extends Entity {
-	final double shotSpeed = 12;
-	int lifeLeft;
+	final double shotSpeed = 500 / World.fps; // Frames per second.
+	double lifeLeft;
 	Color color;
 
-	public Shot(double x, double y, double angle, double shipXVel, double shipYVel, int lifeLeft, Color color) {
+	public Shot(double x, double y, double angle, double shipXVel, double shipYVel, double lifeLeft, Color color) {
 		super(x, y, angle, 0); // Thanks for the comment regarding radius = 0!
 		
 		/*	Add the velocity of the ship to the velocity the shot velocity
@@ -17,7 +18,7 @@ public class Shot extends Entity {
 		
 		/*	The number of frames the shot will last for before
 			disappearing if it doesn't hit anything */
-		this.lifeLeft = lifeLeft;
+		this.lifeLeft = lifeLeft * World.fps;
 		this.color = color;
 	}
 

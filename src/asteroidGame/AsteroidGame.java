@@ -1,8 +1,9 @@
 package asteroidGame;
 
+import asteroidGame.entity.Asteroid;
 import asteroidGame.entity.Spawn;
 import asteroidGame.entity.Shot;
-import asteroidGame.entity.Asteroid;
+import asteroidGame.entity.Enemy;
 import asteroidGame.entity.Ship;
 import asteroidGame.entity.Entity;
 import java.applet.*;
@@ -28,7 +29,7 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 
 	boolean shooting;
 
-	ArrayList<Asteroid> asteroids = new ArrayList<>();
+	ArrayList<Enemy> enemies = new ArrayList<>();
 	ArrayList<Shot> shots = new ArrayList<>();
 	ArrayList<Spawn> spawners = new ArrayList<>();
 	
@@ -50,7 +51,7 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 		astNumSplit = 2;
 		endTime = 0;
 		startTime = 0;
-		framePeriod = 25;
+		framePeriod = World.framePeriod;
 		addKeyListener(this); //tell it to listen for KeyEvents
 		dim = getSize();
 		img = createImage(dim.width, dim.height);
@@ -64,7 +65,7 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 		// create a new, inactive ship centered on the screen
 		// I like .35 for acceleration, .98 for velocityDecay, and
 		// .1 for rotationalSpeed. They give the controls a nice feel.
-		ship = new Ship(250, 250, 0, .35, .98, .1, 2, new Color(250, 250, 250));
+		ship = new Ship(250, 250, 0, .35, .98, .1, 0.33, new Color(250, 250, 250));
 
 		spawnone = new Spawn(100, 100, 40, Color.RED);
 		spawntwo = new Spawn(400, 100, 40, Color.BLUE);
@@ -79,17 +80,18 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 		//one is deleted). The level number is equal to the
 		//number of asteroids at it's start.
 		
-		asteroids = new ArrayList<>();
+		enemies = new ArrayList<>();
 		shots = new ArrayList<>();
 		spawners = new ArrayList<>();
 		
+		// Add the spawners!
 		spawners.add(new Spawn(100, 100, 40, Color.RED));
 		spawners.add(new Spawn(250, 300, 40, Color.GREEN));
 		spawners.add(new Spawn(400, 100, 40, Color.BLUE));
 		
 		//create asteroids in random spots on the screen
 		for (int i = 0; i < level; i++)
-			asteroids.add(	new Asteroid(Math.random() * dim.width,
+			enemies.add(new Asteroid(Math.random() * dim.width,
 							Math.random() * dim.height, astRadius, minAstVel,
 							maxAstVel, astNumHits, astNumSplit));
 	}
@@ -109,9 +111,9 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 		}
 	
 		// Draw all asteroids.
-		Iterator itr1 = asteroids.iterator();
+		Iterator itr1 = enemies.iterator();
 		while (itr1.hasNext()) {
-			Asteroid asteroid = (Asteroid) itr1.next();
+			Enemy asteroid = (Enemy) itr1.next();
 			if (asteroid.shouldremove())
 				itr1.remove();
 			asteroid.draw(g);
@@ -144,30 +146,30 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 		}
 		
 		// Update asteroids.
-		ArrayList<Asteroid> temp = new ArrayList<>();
+		ArrayList<Enemy> temp = new ArrayList<>();
 		
-		for (Asteroid asteroid : asteroids) {
-			asteroid.move();
-			if (asteroid.collision(ship)) {
+		for (Enemy enemy : enemies) {
+			enemy.move();
+			if (enemy.collision(ship)) {
 				level --;
 				setUpNextLevel();
 				break;
 			}
 			for (Entity shot : shots) {
-				if (asteroid.collision(shot)) {
+				if (enemy.collision(shot)) {
 					shot.remove();
-					if (asteroid.getHitsLeft() > 1) {
-						for (int k = 0; k < asteroid.getNumSplit(); k++)
-							temp.add(asteroid.createSplitAsteroid(minAstVel, maxAstVel));
+					if (enemy.getHitsLeft() > 1) {
+						for (int k = 0; k < enemy.getNumSplit(); k++)
+							temp.add(enemy.createSplitAsteroid(minAstVel, maxAstVel));
 					}
-					asteroid.remove();
+					enemy.remove();
 					break;
 				}
 			}
 		}
 		
 		// Join temporary into current.
-		asteroids.addAll(temp);
+		enemies.addAll(temp);
 		
 		// Check the spawners.
 		for (Spawn spawn : spawners) {
@@ -182,7 +184,7 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 			startTime = System.currentTimeMillis();
 
 			//start next level when all asteroids are destroyed
-			if (asteroids.size() <= 0)
+			if (enemies.size() <= 0)
 				setUpNextLevel();
 
 			if (!paused) {
