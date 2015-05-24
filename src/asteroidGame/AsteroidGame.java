@@ -3,6 +3,8 @@ package asteroidGame;
 import java.applet.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public class AsteroidGame extends Applet implements Runnable, KeyListener {
 
@@ -12,21 +14,18 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 	Image img;
 	Graphics g;
 
-
 	long endTime, startTime, framePeriod;
 
 	Ship ship;
 	boolean paused; // True if the game is paused. Enter is the pause key
-	Shot[] shots;
 
 	Spawn spawnone, spawntwo, spawnthree;
-        
-	int numShots;
 
 	boolean shooting;
 
-	Asteroid[] asteroids; //the array of asteroids
-	int numAsteroids; //the number of asteroids currently in the array
+	ArrayList<Asteroid> asteroids = new ArrayList<>();
+	ArrayList<Shot> shots = new ArrayList<>();
+	
 	double astRadius, minAstVel, maxAstVel; //values used to create
 	//asteroids
 	int astNumHits, astNumSplit;
@@ -37,22 +36,12 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 	public void init() {
 		resize(900, 900);
 
-		shots = new Shot[41];
-		//41 is a shot's life period plus one.
-		//since at most one shot can be fired per frame,
-		//there will never be more than 41 shots if each one only
-		//lives for 40 frames.
-
-		numAsteroids = 0;
 		level = 0; //will be incremented to 1 when first level is set up
 		astRadius = 30; //values used to create the asteroids
 		minAstVel = .5;
 		maxAstVel = 5;
 		astNumHits = 3;
 		astNumSplit = 2;
-
-
-
 		endTime = 0;
 		startTime = 0;
 		framePeriod = 25;
@@ -70,7 +59,6 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 		// I like .35 for acceleration, .98 for velocityDecay, and
 		// .1 for rotationalSpeed. They give the controls a nice feel.
 		ship = new Ship(250, 250, 0, .35, .98, .1, 12, new Color(250, 250, 250));
-		numShots = 0;
 
 		spawnone = new Spawn(100, 100, 40, Color.RED);
 		spawntwo = new Spawn(400, 100, 40, Color.BLUE);
@@ -84,14 +72,15 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 		//the split asteroids are created first, then the original
 		//one is deleted). The level number is equal to the
 		//number of asteroids at it's start.
-		asteroids = new Asteroid[level *
-			(int) Math.pow(astNumSplit, astNumHits - 1) + 1];
-		numAsteroids = level;
+		
+		asteroids = new ArrayList<>();
+		shots = new ArrayList<>();
+		
 		//create asteroids in random spots on the screen
-		for (int i = 0; i < numAsteroids; i++)
-			asteroids[i] = new Asteroid(Math.random() * dim.width,
-				Math.random() * dim.height, astRadius, minAstVel,
-				maxAstVel, astNumHits, astNumSplit);
+		for (int i = 0; i < level; i++)
+			asteroids.add(	new Asteroid(Math.random() * dim.width,
+							Math.random() * dim.height, astRadius, minAstVel,
+							maxAstVel, astNumHits, astNumSplit));
 	}
 
 	@Override
@@ -99,12 +88,24 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 		g.setColor(Color.black);
 		g.fillRect(0, 0, 900, 900);
 
-		for (int i = 0; i < numShots; i++) //draw all the shots on the screen
-                    shots[i].draw(g);
+		// Draw all shots.
+		Iterator itr0 = shots.iterator();
+		while (itr0.hasNext()) {
+			Entity shot = (Entity) itr0.next();
+			if (shot.shouldremove())
+				itr0.remove();
+			shot.draw(g);
+		}
+	
+		// Draw all asteroids.
+		Iterator itr1 = asteroids.iterator();
+		while (itr1.hasNext()) {
+			Entity asteroid = (Entity) itr1.next();
+			if (asteroid.shouldremove())
+				itr1.remove();
+			asteroid.draw(g);
+		}
 
-
-		for (int i = 0; i < numAsteroids; i++)
-                    asteroids[i].draw(g);
 		ship.draw(g); //draw the ship
 		spawnone.draw(g);
 		spawntwo.draw(g);
@@ -117,53 +118,69 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 	}
 
 	@Override
-	public void update(Graphics gfx) {
+	public void update(Graphics gfx) {	
 		paint(gfx);
 	}
-
-
+	
+	public void step() {
+		// Update ship.
+		ship.move();
+		
+		for (Entity shot : shots) {
+			shot.move();
+		}
+		
+		// Update asteroids.
+		ArrayList<Asteroid> temp = new ArrayList<>();
+		
+		for (Asteroid asteroid : asteroids) {
+			asteroid.move();
+			if (asteroid.collision(ship)) {
+				level --;
+				setUpNextLevel();
+				break;
+			}
+			for (Entity shot : shots) {
+				if (asteroid.collision(shot)) {
+					shot.remove();
+					if (asteroid.getHitsLeft() > 1) {
+						for (int k = 0; k < asteroid.getNumSplit(); k++)
+							temp.add(asteroid.createSplitAsteroid(minAstVel, maxAstVel));
+					}
+					asteroid.remove();
+					break;
+				}
+			}
+		}
+		
+		// Join temporary into current.
+		asteroids.addAll(temp);
+	}
+	
 	@Override
 	public void run() {
 		for (;;) {
 			startTime = System.currentTimeMillis();
 
 			//start next level when all asteroids are destroyed
-			if (numAsteroids <= 0)
+			if (asteroids.size() <= 0)
 				setUpNextLevel();
 
 			if (!paused) {
-				ship.move(); // move the ship
-				//move shots and remove dead shots
-				for (int i = 0; i < numShots; i++) {
-					shots[i].move();
-					//removes shot if it has gone for too long
-					//without hitting anything
-					if (shots[i].getLifeLeft() <= 0) {
-						//shifts all the next shots up one
-						//space in the array
-						deleteShot(i);
-						i--; // move the outer loop back one so
-						// the shot shifted up is not skipped
-					}
-				}
-
-
-				//move asteroids and check for collisions
-				updateAsteroids();
+				step();
+				
 				updateRed();
 				updateBlue();
 				updateGreen();
 
-
 				if (shooting && ship.canShoot()) {
-					//add a shot on to the array
-					shots[numShots] = ship.shoot();
-					numShots++;
-
+					// Add a shot.
+					shots.add(ship.shoot());
 				}
 			}
 
 			repaint();
+			
 			try {
 				endTime = System.currentTimeMillis();
 				if (framePeriod - (endTime - startTime) > 0)
@@ -173,29 +190,6 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 		}
 	}
 
-	private void deleteShot(int index) {
-		//delete shot and move all shots after it up in the array
-		numShots--;
-		for (int i = index; i < numShots; i++)
-			shots[i] = shots[i + 1];
-		shots[numShots] = null;
-	}
-
-
-	private void deleteAsteroid(int index) {
-		//delete asteroid and shift ones after it up in the array
-		numAsteroids--;
-		for (int i = index; i < numAsteroids; i++)
-			asteroids[i] = asteroids[i + 1];
-
-		asteroids[numAsteroids] = null;
-	}
-
-	private void addAsteroid(Asteroid ast) {
-		//adds the asteroid passed in to the end of the array
-		asteroids[numAsteroids] = ast;
-		numAsteroids++;
-	}
 	private void updateRed() {
 		if (spawnone.contact(ship)) {
 			Color cee = new Color(255, 0, 0);
@@ -212,44 +206,6 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 		if (spawntwo.contact(ship)) {
 			Color cee = new Color(0, 0, 255);
 			ship.colorReset(cee);
-		}
-	}
-
-
-
-	private void updateAsteroids() {
-		for (int i = 0; i < numAsteroids; i++) {
-			// move each asteroid
-			asteroids[i].move();
-			//check for collisions with the ship, restart the
-			//level if the ship gets hit
-			if (asteroids[i].collision(ship)) {
-				level--; //restart this level
-				numAsteroids = 0;
-				return;
-			}
-			//check for collisions with any of the shots
-			for (int j = 0; j < numShots; j++) {
-				if (asteroids[i].collision(shots[j])) {
-					//if the shot hit an asteroid, delete the shot
-					deleteShot(j);
-					//split the asteroid up if needed
-					if (asteroids[i].getHitsLeft() > 1) {
-						for (int k = 0; k < asteroids[i].getNumSplit(); k++)
-							addAsteroid(
-								asteroids[i].createSplitAsteroid(
-									minAstVel, maxAstVel));
-					}
-					//delete the original asteroid
-					deleteAsteroid(i);
-					j = numShots; //break out of inner loop - it has
-					//already been hit, don't need to check
-					//for collision with other shots
-					i--; //don't skip asteroid shifted back into
-					//the deleted asteroid's position
-				}
-			}
-
 		}
 	}
 

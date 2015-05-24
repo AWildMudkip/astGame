@@ -44,6 +44,7 @@ public class Ship extends Entity {
 		reed = col;
 	}
 
+	@Override
 	public void draw(Graphics g) {
 		//rotate the points, translate them to the ship's location (by
 		//adding x and y), then round them by adding .5 and casting them
@@ -79,6 +80,7 @@ public class Ship extends Entity {
 		reed = c;
 	}
 
+	@Override
 	public void move() {
 		if (shotDelayLeft > 0) //move() is called every frame that the game
 			shotDelayLeft--; //is run; this ticks down the shot delay
