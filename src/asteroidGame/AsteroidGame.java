@@ -1,6 +1,6 @@
 package asteroidGame;
 
-import asteroidGame.spawner.Spawn;
+import asteroidGame.entity.Spawn;
 import asteroidGame.entity.Shot;
 import asteroidGame.entity.Asteroid;
 import asteroidGame.entity.Ship;
@@ -81,6 +81,11 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 		
 		asteroids = new ArrayList<>();
 		shots = new ArrayList<>();
+		spawners = new ArrayList<>();
+		
+		spawners.add(new Spawn(100, 100, 40, Color.RED));
+		spawners.add(new Spawn(250, 300, 40, Color.GREEN));
+		spawners.add(new Spawn(400, 100, 40, Color.BLUE));
 		
 		//create asteroids in random spots on the screen
 		for (int i = 0; i < level; i++)
@@ -111,11 +116,13 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 				itr1.remove();
 			asteroid.draw(g);
 		}
+		
+		// Draw the spawners.
+		for (Spawn spawn : spawners) {
+			spawn.draw(g);
+		}
 
-		ship.draw(g); //draw the ship
-		spawnone.draw(g);
-		spawntwo.draw(g);
-		spawnthree.draw(g);
+		ship.draw(g); // Draw the ship.
 
 		g.setColor(Color.cyan); //Display level number in top left corner
 		g.drawString("Level " + level, 20, 20);
@@ -161,6 +168,12 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 		
 		// Join temporary into current.
 		asteroids.addAll(temp);
+		
+		// Check the spawners.
+		for (Spawn spawn : spawners) {
+			if (spawn.collision(ship))
+				ship.colorReset(spawn.getColor());
+		}
 	}
 	
 	@Override
@@ -174,11 +187,7 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 
 			if (!paused) {
 				step();
-				
-				updateRed();
-				updateBlue();
-				updateGreen();
-
+			
 				if (shooting && ship.canShoot()) {
 					// Add a shot.
 					shots.add(ship.shoot());
@@ -193,25 +202,6 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 					Thread.sleep(framePeriod - (endTime - startTime));
 			} catch (InterruptedException e) {}
 
-		}
-	}
-
-	private void updateRed() {
-		if (spawnone.contact(ship)) {
-			Color cee = new Color(255, 0, 0);
-			ship.colorReset(cee);
-		}
-	}
-	private void updateGreen() {
-		if (spawnthree.contact(ship)) {
-			Color cee = new Color(0, 255, 0);
-			ship.colorReset(cee);
-		}
-	}
-	private void updateBlue() {
-		if (spawntwo.contact(ship)) {
-			Color cee = new Color(0, 0, 255);
-			ship.colorReset(cee);
 		}
 	}
 
