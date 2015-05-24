@@ -144,7 +144,7 @@ public class Ship extends Entity {
 		shotDelayLeft = shotDelay; //set delay till next shot can be fired
 		//a life of 40 makes the shot travel about the width of the
 		//screen before disappearing
-		return new Shot(x, y, angle, xVelocity, yVelocity, 40);
+		return new Shot(x, y, angle, xVelocity, yVelocity, 40, reed);
 	}
 
 }

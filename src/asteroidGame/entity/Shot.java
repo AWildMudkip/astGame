@@ -5,8 +5,9 @@ import java.awt.*;
 public class Shot extends Entity {
 	final double shotSpeed = 12;
 	int lifeLeft;
+	Color color;
 
-	public Shot(double x, double y, double angle, double shipXVel, double shipYVel, int lifeLeft) {
+	public Shot(double x, double y, double angle, double shipXVel, double shipYVel, int lifeLeft, Color color) {
 		super(x, y, angle, 0); // Thanks for the comment regarding radius = 0!
 		
 		/*	Add the velocity of the ship to the velocity the shot velocity
@@ -17,6 +18,7 @@ public class Shot extends Entity {
 		/*	The number of frames the shot will last for before
 			disappearing if it doesn't hit anything */
 		this.lifeLeft = lifeLeft;
+		this.color = color;
 	}
 
 	public void move() {
@@ -39,7 +41,7 @@ public class Shot extends Entity {
 	}
 
 	public void draw(Graphics g) {
-		g.setColor(Color.RED); //set shot color
+		g.setColor(this.color); //set shot color
 		//with integer coordinates (.5 added to x-1 and y-1 for rounding)
 		g.fillRect((int)(x), (int)(y), 3, 3);
 	}
