@@ -6,6 +6,6 @@ public class Chaser extends Enemy {
 	}
 	
 	public void move(Entity ship) {
-		// How the Chaser moves. 
+		// How the Chaser moves. You can call ship coordinates here.
 	}
 }
