@@ -19,7 +19,7 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 	boolean paused; // True if the game is paused. Enter is the pause key
 	Shot[] shots;
 
-        Spawn spawnone, spawntwo, spawnthree;
+	Spawn spawnone, spawntwo, spawnthree;
         
 	int numShots;
 
