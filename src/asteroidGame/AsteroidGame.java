@@ -193,25 +193,22 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 		numAsteroids++;
 	}
 	private void updateRed() {
-		if (spawnone.shipRed(ship)) {
-			Color cee = new Color(255, 0, 0);
-			ship.colorReset(cee);
-		}
-
+            if (spawnone.contact(ship)) {
+                Color cee = new Color(255, 0, 0);
+		ship.colorReset(cee);
+            }
 	}
 	private void updateGreen() {
-		if (spawnthree.shipGreen(ship)) {
-			Color cee = new Color(0, 255, 0);
-			ship.colorReset(cee);
-		}
-
+            if (spawnthree.contact(ship)) {
+                Color cee = new Color(0, 255, 0);
+                ship.colorReset(cee);
+            }
 	}
 	private void updateBlue() {
-		if (spawntwo.shipBlue(ship)) {
-			Color cee = new Color(0, 0, 255);
-			ship.colorReset(cee);
-		}
-
+            if (spawntwo.contact(ship)) {
+                Color cee = new Color(0, 0, 255);
+		ship.colorReset(cee);
+            }
 	}
 
 
