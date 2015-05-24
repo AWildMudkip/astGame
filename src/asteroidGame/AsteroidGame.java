@@ -30,6 +30,7 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 
 	ArrayList<Asteroid> asteroids = new ArrayList<>();
 	ArrayList<Shot> shots = new ArrayList<>();
+	ArrayList<Spawn> spawners = new ArrayList<>();
 	
 	double astRadius, minAstVel, maxAstVel; //values used to create
 	//asteroids
@@ -39,7 +40,7 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 
 	@Override
 	public void init() {
-		resize(900, 900);
+		resize(World.scrnWidth, World.scrnHeight);
 
 		level = 0; //will be incremented to 1 when first level is set up
 		astRadius = 30; //values used to create the asteroids
@@ -96,7 +97,7 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 		// Draw all shots.
 		Iterator itr0 = shots.iterator();
 		while (itr0.hasNext()) {
-			Entity shot = (Entity) itr0.next();
+			Shot shot = (Shot) itr0.next();
 			if (shot.shouldremove())
 				itr0.remove();
 			shot.draw(g);
@@ -105,7 +106,7 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 		// Draw all asteroids.
 		Iterator itr1 = asteroids.iterator();
 		while (itr1.hasNext()) {
-			Entity asteroid = (Entity) itr1.next();
+			Asteroid asteroid = (Asteroid) itr1.next();
 			if (asteroid.shouldremove())
 				itr1.remove();
 			asteroid.draw(g);
@@ -131,7 +132,7 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 		// Update ship.
 		ship.move();
 		
-		for (Entity shot : shots) {
+		for (Shot shot : shots) {
 			shot.move();
 		}
 		

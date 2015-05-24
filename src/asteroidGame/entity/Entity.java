@@ -1,13 +1,14 @@
 package asteroidGame.entity;
 
 import java.awt.*;
+import asteroidGame.World;
 
 public abstract class Entity {
 	protected double x, y, angle, xVelocity, yVelocity, radius;
 	private boolean remove;
 	
-	protected final int scrnWidth = 900;
-	protected final int scrnHeight = 900;
+	protected final int scrnWidth = World.scrnWidth;
+	protected final int scrnHeight = World.scrnHeight;
 	
 	public Entity(double x, double y, double angle, double radius) {
 		// This is the generic class shared across entities.
@@ -56,7 +57,4 @@ public abstract class Entity {
 		
 		return this.remove;
 	}
-	
-	public void draw(Graphics g) {}
-	public void move() {}
 }

@@ -19,7 +19,6 @@ public class Shot extends Entity {
 		this.lifeLeft = lifeLeft;
 	}
 
-	@Override
 	public void move() {
 		lifeLeft--; // used to make shot disappear if it goes too long without hitting anything.
 		
@@ -39,7 +38,6 @@ public class Shot extends Entity {
 			y -= scrnHeight;
 	}
 
-	@Override
 	public void draw(Graphics g) {
 		g.setColor(Color.RED); //set shot color
 		//with integer coordinates (.5 added to x-1 and y-1 for rounding)

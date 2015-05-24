@@ -17,7 +17,6 @@ public class Asteroid extends Entity {
 		yVelocity = vel * Math.sin(dir);
 	}
 	
-	@Override
 	public void move() {
 		x += xVelocity; //move the asteroid
 		y += yVelocity;
@@ -36,7 +35,6 @@ public class Asteroid extends Entity {
 			y -= scrnHeight + 2 * radius;
 	}
 
-	@Override
 	public void draw(Graphics g) {
 		g.setColor(Color.gray); // set color for the asteroid
 		// draw the asteroid centered at (x,y)
