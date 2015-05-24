@@ -40,9 +40,9 @@ int level; //the current level number
 
 public void init()
 	{
- 	resize(500,500);
+ 	resize(900,900);
 
-	 shots=new Shot[41];
+	 shots=new Shot[101];
 	//41 is a shot's life period plus one.
  	//since at most one shot can be fired per frame,
  	//there will never be more than 41 shots if each one only
@@ -102,7 +102,7 @@ public void setUpNextLevel()
 public void paint(Graphics gfx)
 	{
  	g.setColor(Color.black);
- 	g.fillRect(0,0,500,500);
+ 	g.fillRect(0,0,900,900);
 
  	for(int i=0;i<numShots;i++) //draw all the shots on the screen
  	shots[i].draw(g);
@@ -145,7 +145,7 @@ public void run()
  				shots[i].move(dim.width,dim.height);
  				//removes shot if it has gone for too long
  				//without hitting anything
- 				if(shots[i].getLifeLeft()<=0)
+ 				if(shots[i].getLifeLeft()<=-75)
  					{
  						//shifts all the next shots up one
  						//space in the array
