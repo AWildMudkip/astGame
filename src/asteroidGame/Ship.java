@@ -2,7 +2,7 @@ package asteroidGame;
 
 import java.awt.*;
 
-public class Ship {
+public class Ship extends Entity {
 	final double[] origXPts = {
 			14, -10, -6, -10
 		}, origYPts = {
@@ -13,23 +13,18 @@ public class Ship {
 		}, origFlameYPts = {
 			-3, 0, 3
 		};
-	final int radius = 6;
 
-	double x, y, angle, xVelocity, yVelocity, acceleration,
-	velocityDecay, rotationalSpeed;
+	double acceleration, velocityDecay, rotationalSpeed;
 	boolean turningLeft, turningRight, accelerating, active;
 	int[] xPts, yPts, flameXPts, flameYPts;
 	int shotDelay, shotDelayLeft;
 	Color reed;
 
 
-	public Ship(double x, double y, double angle, double acceleration,
-		double velocityDecay, double rotationalSpeed,
-		int shotDelay, Color col) {
-		//this.x refers to the Ship's x, x refers to the x parameter
-		this.x = x;
-		this.y = y;
-		this.angle = angle;
+	public Ship(double x, double y, double angle, double acceleration, double velocityDecay, double rotationalSpeed, int shotDelay, Color col) {
+		super(x, y, angle, 6); // Radius is 6
+		
+		// Specific to the ship entity.
 		this.acceleration = acceleration;
 		this.velocityDecay = velocityDecay;
 		this.rotationalSpeed = rotationalSpeed;
@@ -84,7 +79,7 @@ public class Ship {
 		reed = c;
 	}
 
-	public void move(int scrnWidth, int scrnHeight) {
+	public void move() {
 		if (shotDelayLeft > 0) //move() is called every frame that the game
 			shotDelayLeft--; //is run; this ticks down the shot delay
 		if (turningLeft) //this is backwards from typical polar coodinates
@@ -127,19 +122,8 @@ public class Ship {
 		this.turningRight = turningRight;
 	}
 
-	public double getX() {
-		return x;
-	}
-
-	public double getY() {
-		return y;
-	}
 	public Color giveColor() {
 		return reed;
-	}
-
-	public double getRadius() {
-		return radius;
 	}
 
 	public void setActive(boolean active) {
@@ -161,8 +145,6 @@ public class Ship {
 		//a life of 40 makes the shot travel about the width of the
 		//screen before disappearing
 		return new Shot(x, y, angle, xVelocity, yVelocity, 40);
-
-
 	}
 
 }

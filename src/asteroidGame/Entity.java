@@ -50,6 +50,10 @@ public abstract class Entity {
 	}
 	
 	public boolean shouldremove() {
+		/*	This is called by the update function to remove an entity when
+			it has served its purpose in the game. Rest in pieces.
+		*/
+		
 		return this.remove;
 	}
 }

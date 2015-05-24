@@ -33,6 +33,7 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 
 	int level; //the current level number
 
+	@Override
 	public void init() {
 		resize(900, 900);
 
@@ -93,6 +94,7 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 				maxAstVel, astNumHits, astNumSplit);
 	}
 
+	@Override
 	public void paint(Graphics gfx) {
 		g.setColor(Color.black);
 		g.fillRect(0, 0, 900, 900);
@@ -114,11 +116,13 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 		gfx.drawImage(img, 0, 0, this);
 	}
 
+	@Override
 	public void update(Graphics gfx) {
 		paint(gfx);
 	}
 
 
+	@Override
 	public void run() {
 		for (;;) {
 			startTime = System.currentTimeMillis();
@@ -128,10 +132,10 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 				setUpNextLevel();
 
 			if (!paused) {
-				ship.move(dim.width, dim.height); // move the ship
+				ship.move(); // move the ship
 				//move shots and remove dead shots
 				for (int i = 0; i < numShots; i++) {
-					shots[i].move(dim.width, dim.height);
+					shots[i].move();
 					//removes shot if it has gone for too long
 					//without hitting anything
 					if (shots[i].getLifeLeft() <= 0) {
@@ -219,14 +223,14 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 			asteroids[i].move();
 			//check for collisions with the ship, restart the
 			//level if the ship gets hit
-			if (asteroids[i].shipCollision(ship)) {
+			if (asteroids[i].collision(ship)) {
 				level--; //restart this level
 				numAsteroids = 0;
 				return;
 			}
 			//check for collisions with any of the shots
 			for (int j = 0; j < numShots; j++) {
-				if (asteroids[i].shotCollision(shots[j])) {
+				if (asteroids[i].collision(shots[j])) {
 					//if the shot hit an asteroid, delete the shot
 					deleteShot(j);
 					//split the asteroid up if needed
