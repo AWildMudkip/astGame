@@ -1,7 +1,7 @@
 package asteroidGame;
 
 import asteroidGame.entity.Asteroid;
-import asteroidGame.entity.Chaser;
+
 import asteroidGame.entity.Spawn;
 import asteroidGame.entity.Shot;
 import asteroidGame.entity.Enemy;
@@ -90,9 +90,7 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 			enemies.add(new Asteroid(Math.random() * dim.width,
 							Math.random() * dim.height, astRadius, minAstVel,
 							maxAstVel, astNumHits, astNumSplit, Asteroid.randomColor()));
-			enemies.add(new Chaser(Math.random() * dim.width,
-							Math.random() * dim.height, astRadius, minAstVel,
-							maxAstVel, astNumHits));
+			
 	}
 
 	@Override
@@ -148,12 +146,10 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 		ArrayList<Enemy> temp = new ArrayList<>();
 		
 		for (Enemy enemy : enemies) {
-			if (enemy instanceof Chaser) {
-				Chaser chaser = (Chaser) enemy;
-				chaser.move(ship);
-			} else {
-				enemy.move();
-			}
+			if(enemy instanceof Asteroid)
+                        { enemy=(Asteroid)enemy;
+                          enemy.move();
+                        }
 			
 			if (enemy.collision(ship)) {
 				level --;
