@@ -9,7 +9,7 @@ public class Shot extends Entity {
 	Color color;
 
 	public Shot(double x, double y, double angle, double shipXVel, double shipYVel, double lifeLeft, Color color) {
-		super(x, y, angle, 0); // Thanks for the comment regarding radius = 0!
+		super(x, y, angle);
 		
 		/*	Add the velocity of the ship to the velocity the shot velocity
 			(so the shot's velocity is relative to the ship's) */

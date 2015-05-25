@@ -24,7 +24,7 @@ public class Ship extends Entity {
 	Shape polyship;
 
 	public Ship(double x, double y, double angle, double acceleration, double velocityDecay, double rotationalSpeed, double shotDelay, Color col) {
-		super(x, y, angle, 6); // Radius is 6
+		super(x, y, angle);
 		
 		// Specific to the ship entity.
 		this.acceleration = acceleration;

@@ -8,8 +8,8 @@ public class Enemy extends Entity {
 	Color color;
 	double velocity;
 
-	public Enemy(double x, double y, double radius, double minVelocity, double maxVelocity, int hitsLeft, Color color) {
-		super(x, y, 2 * Math.PI * Math.random(), radius);
+	public Enemy(double x, double y, double minVelocity, double maxVelocity, int hitsLeft, Color color) {
+		super(x, y, 2 * Math.PI * Math.random());
 		
 		this.hitsLeft = hitsLeft;
 		this.color = color;

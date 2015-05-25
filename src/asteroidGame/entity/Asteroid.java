@@ -9,11 +9,13 @@ import java.util.Random;
 public class Asteroid extends Enemy {
 	int numSplit;
 	Shape ellipse;
+	private double radius;
 
 	public Asteroid(double x, double y, double radius, double minVelocity, double maxVelocity, int hitsLeft, int numSplit, Color color) {
-		super(x, y, radius, minVelocity, maxVelocity, hitsLeft, color);
+		super(x, y, minVelocity, maxVelocity, hitsLeft, color);
 		
 		this.numSplit = numSplit;
+		this.radius = radius;
 		
 		shape = new Ellipse2D.Double((int)(x - radius + .5), (int)(y - radius + .5), (int)(2 * radius), (int)(2 * radius));
 	}
