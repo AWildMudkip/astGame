@@ -1,6 +1,7 @@
 package asteroidGame.entity;
 
 import asteroidGame.World;
+import asteroidGame.sound.Sound;
 import java.awt.*;
 
 public class Ship extends Entity {
@@ -175,10 +176,10 @@ public class Ship extends Entity {
 	}
 	
 	public void startSound() {
-		thrusterSound.start();
+		Sound.thrusterSound.start();
 	}
 	
 	public void stopSound() {
-		thrusterSound.stop();
+		Sound.thrusterSound.stop();
 	}
 }

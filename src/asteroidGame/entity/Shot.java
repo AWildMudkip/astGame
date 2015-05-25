@@ -1,6 +1,7 @@
 package asteroidGame.entity;
 
 import asteroidGame.World;
+import asteroidGame.sound.Sound;
 import java.awt.*;
 
 public class Shot extends Entity {
@@ -59,6 +60,6 @@ public class Shot extends Entity {
 	}
 	
 	public final void playSound() {
-		shotSound.playOnce();
+		Sound.shotSound.playOnce();
 	}
 }

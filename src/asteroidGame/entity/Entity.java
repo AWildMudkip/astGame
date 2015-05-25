@@ -13,11 +13,6 @@ public abstract class Entity {
 	protected final int scrnWidth = World.scrnWidth;
 	protected final int scrnHeight = World.scrnHeight;
 	
-	// Preload all sounds.
-	protected static final Sound shotSound = new Sound("laser.wav");
-	protected static final Sound asteroidSound = new Sound("explosion-02.wav");
-	protected static final Sound thrusterSound = new Sound("rocket.wav");
-	
 	public Entity(double x, double y, double angle) {
 		// This is the generic class shared across entities.
 		

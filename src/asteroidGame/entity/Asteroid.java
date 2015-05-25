@@ -1,5 +1,6 @@
 package asteroidGame.entity;
 
+import asteroidGame.sound.Sound;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.geom.Ellipse2D;
@@ -82,6 +83,6 @@ public class Asteroid extends Enemy {
 	}
 	
 	public final void playSound() {
-		asteroidSound.playOnce();
+		Sound.asteroidSound.playOnce();
 	}
 }
