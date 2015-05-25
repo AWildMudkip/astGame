@@ -2,12 +2,7 @@ package asteroidGame;
 
 import asteroidGame.entity.Asteroid;
 
-import asteroidGame.entity.Spawn;
-import asteroidGame.entity.Shot;
-import asteroidGame.entity.Enemy;
-import asteroidGame.entity.Ship;
-import asteroidGame.entity.Shrapnel;
-import asteroidGame.entity.Virus;
+import asteroidGame.entity.*;
 import java.applet.*;
 import java.awt.*;
 import java.awt.event.*;

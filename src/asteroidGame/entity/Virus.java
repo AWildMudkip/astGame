@@ -59,7 +59,7 @@ public class Virus extends Enemy {
 		ArrayList<Shrapnel> shrapnels = new ArrayList<>();
 		double a = 360 / numProjectiles;
         for (int i = 0; i < numProjectiles; i++) {
-			shrapnels.add(new Shrapnel(x, y, velocity, velocity, i * a, color));
+			shrapnels.add(new Shrapnel(x, y, velocity, velocity, i * a + this.getAngle(), color));
 		}
 		return shrapnels;
     }   
