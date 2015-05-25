@@ -193,6 +193,14 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 						}
 						score += enemy.getScore();
 						enemy.remove();
+					} else if (enemy instanceof Virus) {
+						Virus virus = (Virus) enemy;
+						virus.hit();
+						if (virus.getHitsLeft() == 0) {
+							virus.remove();
+							virus.virusExplode();
+							score += virus.getScore();
+						}
 					}
 					break;
 				}

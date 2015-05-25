@@ -43,12 +43,18 @@ public class Virus extends Enemy {
 		
 		shape = new StarPolygon((int) x, (int) y, outerRadius, innerRadius, spikes, angle);
     }
+	
 	@Override
     public void draw(Graphics g)
     {
         g.setColor(color);
 		g.drawPolygon((Polygon) shape);
     }
+	
+	public void hit() {
+		hitsLeft --;
+	}
+	
     public void virusExplode()
     {
         
