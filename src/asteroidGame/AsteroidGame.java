@@ -38,12 +38,17 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 	int astNumHits, astNumSplit;
 
 	int level; //the current level number
+	int lives; // Are you a cat? Do you have 9 lives? No? Great.
+	int score; // The score
 
 	@Override
 	public void init() {
 		resize(World.scrnWidth, World.scrnHeight);
 
 		level = 0; //will be incremented to 1 when first level is set up
+		lives = 3;
+		score = 0;
+		
 		astRadius = 30; //values used to create the asteroids
 		minAstVel = .5;
 		maxAstVel = 5;
@@ -125,6 +130,7 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 
 		g.setColor(Color.cyan); //Display level number in top left corner
 		g.drawString("Level " + level, 20, 20);
+		g.drawString("Score " + score, 100, 20);
 
 		gfx.drawImage(img, 0, 0, this);
 	}
@@ -146,10 +152,10 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 		ArrayList<Enemy> temp = new ArrayList<>();
 		
 		for (Enemy enemy : enemies) {
-			if(enemy instanceof Asteroid)
-                        { enemy=(Asteroid)enemy;
-                          enemy.move();
-                        }
+			if (enemy instanceof Asteroid) {
+				enemy = (Asteroid) enemy;
+				enemy.move();
+			}
 			
 			if (enemy.collision(ship)) {
 				level --;
@@ -167,6 +173,7 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 							for (int k = 0; k < asteroid.getNumSplit(); k++)
 								temp.add(asteroid.createSplitAsteroid(minAstVel, maxAstVel));
 						}
+						score += enemy.getScore();
 						enemy.remove();
 					}
 					break;

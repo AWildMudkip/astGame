@@ -1,18 +1,18 @@
 package asteroidGame.entity;
 
 import java.awt.*;
-import java.util.Random;
 
 public class Enemy extends Entity {
-	int hitsLeft;
-	Color color;
-	double velocity;
-
-	public Enemy(double x, double y, double minVelocity, double maxVelocity, int hitsLeft, Color color) {
+	protected int hitsLeft, score;
+	protected Color color;
+	protected double velocity;
+	
+	public Enemy(double x, double y, double minVelocity, double maxVelocity, int hitsLeft, Color color, int score) {
 		super(x, y, 2 * Math.PI * Math.random());
 		
 		this.hitsLeft = hitsLeft;
 		this.color = color;
+		this.score = score;
 		
 		this.velocity = minVelocity + Math.random() * (maxVelocity - minVelocity);
 		xVelocity = velocity * Math.cos(angle);
@@ -31,6 +31,10 @@ public class Enemy extends Entity {
 	
 	public double getVelocity() {
 		return this.velocity;
+	}
+	
+	public int getScore() {
+		return this.score;
 	}
 	
 	public void move() {}

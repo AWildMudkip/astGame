@@ -7,12 +7,12 @@ import java.awt.geom.Ellipse2D;
 import java.util.Random;
 
 public class Asteroid extends Enemy {
-	int numSplit;
-	Shape ellipse;
+	private int numSplit;
 	private double radius;
+	private final static int points = 100; // Static score for blowing one up.
 
 	public Asteroid(double x, double y, double radius, double minVelocity, double maxVelocity, int hitsLeft, int numSplit, Color color) {
-		super(x, y, minVelocity, maxVelocity, hitsLeft, color);
+		super(x, y, minVelocity, maxVelocity, hitsLeft, color, points);
 		
 		this.numSplit = numSplit;
 		this.radius = radius;
