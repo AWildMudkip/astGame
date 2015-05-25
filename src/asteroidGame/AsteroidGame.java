@@ -11,6 +11,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class AsteroidGame extends Applet implements Runnable, KeyListener {
 
@@ -73,7 +75,7 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 		ship = new Ship(250, 250, 0, .35, .98, .1, 0.33, new Color(250, 250, 250));
                 
 		//no shots on the screen at beginning of level
-		paused = false;
+		paused = true;
 		shooting = false;
 		//create an array large enough to hold the biggest number
 		//of asteroids possible on this level (plus one because
@@ -96,6 +98,12 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 							Math.random() * dim.height, astRadius, minAstVel,
 							maxAstVel, astNumHits, astNumSplit, Asteroid.randomColor()));
 			
+	}
+	
+	public void resetShip() {	
+		ship = new Ship(250, 250, 0, .35, .98, .1, 0.33, new Color(250, 250, 250));
+		ship.setActive(true);
+		ship.blink();
 	}
 
 	@Override
@@ -130,7 +138,8 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 
 		g.setColor(Color.cyan); //Display level number in top left corner
 		g.drawString("Level " + level, 20, 20);
-		g.drawString("Score " + score, 100, 20);
+		g.drawString("Score " + score, 120, 20);
+		g.drawString("Lives " + lives, 220, 20);
 
 		gfx.drawImage(img, 0, 0, this);
 	}
@@ -157,10 +166,14 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 				enemy.move();
 			}
 			
-			if (enemy.collision(ship)) {
-				level --;
-				setUpNextLevel();
-				break;
+			if (enemy.collision(ship) && !ship.isInvincible()) {
+				lives --;
+				if (lives == 0) {					
+					break;
+				} else {
+					resetShip();
+					break;
+				}
 			}
 			for (Shot shot : shots) {
 				if (enemy.collision(shot)) {

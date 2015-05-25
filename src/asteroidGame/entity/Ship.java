@@ -2,6 +2,8 @@ package asteroidGame.entity;
 
 import asteroidGame.World;
 import java.awt.*;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Ship extends Entity {
 	final int[] origXPts = {
@@ -19,6 +21,7 @@ public class Ship extends Entity {
 	boolean turningLeft, turningRight, accelerating, active;
 	int[] xPts, yPts, flameXPts, flameYPts;
 	double shotDelay, shotDelayLeft;
+	int flashleft;
 	Color reed;
 	
 	Shape polyship;
@@ -73,10 +76,20 @@ public class Ship extends Entity {
 				origYPts[i] * Math.cos(angle) +
 				y + .5); //translate and round
 		}
-		if (active) // active means game is running (not paused)
-			g.setColor(reed);
-		else // draw the ship dark gray if the game is paused
+		if (active) {// active means game is running (not paused)
+			if (flashleft > 0) {
+				if ((int) (flashleft / 10) % 2 == 0) {
+					g.setColor(reed);
+				} else {
+					g.setColor(Color.BLACK);
+				}
+				flashleft --;
+			} else {
+				g.setColor(reed);
+			}
+		} else { // draw the ship dark gray if the game is paused
 			g.setColor(Color.darkGray);
+		}
 		
 		shape = new Polygon(xPts, yPts, 4);
 		g.drawPolygon((Polygon) shape); // 4 is number of points
@@ -139,6 +152,10 @@ public class Ship extends Entity {
 	public boolean isActive() {
 		return active;
 	}
+	
+	public boolean isInvincible() {
+		return flashleft > 0;
+	}
 
 	public boolean canShoot() {
 		if (shotDelayLeft > 0) //checks to see if the ship is ready to
@@ -151,5 +168,9 @@ public class Ship extends Entity {
 		
 		// Life in seconds.
 		return new Shot(x, y, angle, xVelocity, yVelocity, 5, reed);
+	}
+	
+	public void blink() {
+		flashleft = 3 * World.fps;
 	}
 }
