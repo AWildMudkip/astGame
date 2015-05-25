@@ -8,8 +8,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class AsteroidGame extends Applet implements Runnable, KeyListener {
 
@@ -185,8 +183,9 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 					
 					// This takes care of the asteroid enemy type.
 					if (enemy instanceof Asteroid && enemy.getColor() == shot.getColor()) {
+						Asteroid asteroid = (Asteroid) enemy;
+						asteroid.playSound(); // Boom!
 						if (enemy.getHitsLeft() > 1) {
-							Asteroid asteroid = (Asteroid) enemy;
 							for (int k = 0; k < asteroid.getNumSplit(); k++)
 								temp.add(asteroid.createSplitAsteroid(minAstVel, maxAstVel));
 						}
@@ -277,25 +276,33 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 		} else if (paused || !ship.isActive()) //if the game is
 			return; //paused or ship is inactive, do not respond
 		//to the controls except for enter to unpause
-		else if (e.getKeyCode() == KeyEvent.VK_UP)
+		else if (e.getKeyCode() == KeyEvent.VK_UP) {
 			ship.setAccelerating(true);
-		else if (e.getKeyCode() == KeyEvent.VK_LEFT)
+		}
+		else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
 			ship.setTurningLeft(true);
-		else if (e.getKeyCode() == KeyEvent.VK_RIGHT)
+		}
+		else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
 			ship.setTurningRight(true);
-		else if (e.getKeyCode() == KeyEvent.VK_CONTROL)
+		}
+		else if (e.getKeyCode() == KeyEvent.VK_CONTROL) {
 			shooting = true; //Start shooting if ctrl is pushed
+		}
 	}
 
 	public void keyReleased(KeyEvent e) {
-		if (e.getKeyCode() == KeyEvent.VK_UP)
+		if (e.getKeyCode() == KeyEvent.VK_UP) {
 			ship.setAccelerating(false);
-		else if (e.getKeyCode() == KeyEvent.VK_LEFT)
+		}
+		else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
 			ship.setTurningLeft(false);
-		else if (e.getKeyCode() == KeyEvent.VK_RIGHT)
+		}
+		else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
 			ship.setTurningRight(false);
-		else if (e.getKeyCode() == KeyEvent.VK_CONTROL)
+		}
+		else if (e.getKeyCode() == KeyEvent.VK_CONTROL) {
 			shooting = false;
+		}
 	}
 
 	public void keyTyped(KeyEvent e) {}
