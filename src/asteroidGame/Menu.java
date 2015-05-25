@@ -41,7 +41,7 @@ public Screen(int width, int height) {
     setResizable(false);
     setLocationRelativeTo(null);
     setVisible(true);
-    setTitle("BUILD YOUR EMPIRE");
+    setTitle("Asteroids: Chromatic Conflict");
     setDefaultCloseOperation(EXIT_ON_CLOSE);
     requestFocus();
 
