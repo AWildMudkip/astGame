@@ -46,4 +46,8 @@ public class Shot extends Entity {
 		//with integer coordinates (.5 added to x-1 and y-1 for rounding)
 		g.fillRect((int)(x), (int)(y), 3, 3);
 	}
+	
+	public Color getColor() {
+		return this.color;
+	}
 }

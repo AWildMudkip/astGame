@@ -93,7 +93,7 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 		for (int i = 0; i < level; i++)
 			enemies.add(new Asteroid(Math.random() * dim.width,
 							Math.random() * dim.height, astRadius, minAstVel,
-							maxAstVel, astNumHits, astNumSplit));
+							maxAstVel, astNumHits, astNumSplit, Asteroid.randomColor()));
 	}
 
 	@Override
@@ -155,14 +155,19 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 				setUpNextLevel();
 				break;
 			}
-			for (Entity shot : shots) {
+			for (Shot shot : shots) {
 				if (enemy.collision(shot)) {
 					shot.remove();
-					if (enemy.getHitsLeft() > 1) {
-						for (int k = 0; k < enemy.getNumSplit(); k++)
-							temp.add(enemy.createSplitAsteroid(minAstVel, maxAstVel));
+					
+					// This takes care of the asteroid enemy type.
+					if (enemy instanceof Asteroid && enemy.getColor() == shot.getColor()) {
+						if (enemy.getHitsLeft() > 1) {
+							Asteroid asteroid = (Asteroid) enemy;
+							for (int k = 0; k < asteroid.getNumSplit(); k++)
+								temp.add(asteroid.createSplitAsteroid(minAstVel, maxAstVel));
+						}
+						enemy.remove();
 					}
-					enemy.remove();
 					break;
 				}
 			}

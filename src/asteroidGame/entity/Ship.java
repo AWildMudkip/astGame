@@ -123,7 +123,7 @@ public class Ship extends Entity {
 		this.turningRight = turningRight;
 	}
 
-	public Color giveColor() {
+	public Color getColor() {
 		return reed;
 	}
 
