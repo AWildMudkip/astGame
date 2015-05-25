@@ -64,6 +64,9 @@ public class Ship extends Entity {
 			}
 			g.setColor(Color.red); //set color of flame
 			g.drawPolygon(flameXPts, flameYPts, 3); // 3 is # of points
+			this.startSound();
+		} else {
+			this.stopSound();
 		}
 		//calculate the polgyon for the ship, then draw it
 		for (int i = 0; i < 4; i++) {

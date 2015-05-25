@@ -5,6 +5,7 @@ import java.applet.AudioClip;
 
 public class Sound {
 	private AudioClip clip;
+	private boolean started = false;
 	
 	public Sound(String fileName) {
 		try {
@@ -28,7 +29,10 @@ public class Sound {
 			new Thread() {
 				@Override
 				public void run() {
-					clip.loop();
+					if (!started) {
+						started = true;
+						clip.loop();
+					}
 				}
 			}.start();
 		} catch (Exception e) {}
@@ -40,6 +44,7 @@ public class Sound {
 				@Override
 				public void run() {
 					clip.stop();
+					started = false;
 				}
 			}.start();
 		} catch (Exception e) {}
