@@ -38,6 +38,10 @@ public abstract class Entity {
 		return this.y;
 	}
 	
+	public double getAngle() {
+		return this.angle;
+	}
+	
 	public double getVelocityX() {
 		return this.xVelocity;
 	}

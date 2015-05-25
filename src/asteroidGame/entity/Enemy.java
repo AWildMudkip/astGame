@@ -4,20 +4,19 @@ import java.awt.*;
 import java.util.Random;
 
 public class Enemy extends Entity {
-	int hitsLeft, numSplit;
+	int hitsLeft;
 	Color color;
+	double velocity;
 
-	public Enemy(double x, double y, double radius, double minVelocity, double maxVelocity, int hitsLeft, int numSplit, Color color) {
+	public Enemy(double x, double y, double radius, double minVelocity, double maxVelocity, int hitsLeft, Color color) {
 		super(x, y, 2 * Math.PI * Math.random(), radius);
 		
 		this.hitsLeft = hitsLeft;
-		this.numSplit = numSplit;
 		this.color = color;
 		
-		double	vel = minVelocity + Math.random() * (maxVelocity - minVelocity),
-				dir = 2 * Math.PI * Math.random(); // Random direction.
-		xVelocity = vel * Math.cos(dir);
-		yVelocity = vel * Math.sin(dir);
+		this.velocity = minVelocity + Math.random() * (maxVelocity - minVelocity);
+		xVelocity = velocity * Math.cos(angle);
+		yVelocity = velocity * Math.sin(angle);
 	}
 
 	public int getHitsLeft() {
@@ -25,13 +24,13 @@ public class Enemy extends Entity {
 			be split up into smaller asteroids or destroyed completely. */
 		return hitsLeft;
 	}
-
-	public int getNumSplit() {
-		return numSplit;
-	}
 	
 	public Color getColor() {
 		return this.color;
+	}
+	
+	public double getVelocity() {
+		return this.velocity;
 	}
 	
 	public void move() {}

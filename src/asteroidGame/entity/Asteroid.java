@@ -5,9 +5,12 @@ import java.awt.Graphics;
 import java.util.Random;
 
 public class Asteroid extends Enemy {
+	int numSplit;
 
 	public Asteroid(double x, double y, double radius, double minVelocity, double maxVelocity, int hitsLeft, int numSplit, Color color) {
-		super(x, y, radius, minVelocity, maxVelocity, hitsLeft, numSplit, color);
+		super(x, y, radius, minVelocity, maxVelocity, hitsLeft, color);
+		
+		this.numSplit = numSplit;
 	}
 	
 	public void move() {
@@ -62,5 +65,9 @@ public class Asteroid extends Enemy {
 		}
 		
 		return color;
+	}
+	
+	public int getNumSplit() {
+		return this.numSplit;
 	}
 }

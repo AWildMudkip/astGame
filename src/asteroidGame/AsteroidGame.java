@@ -1,11 +1,11 @@
 package asteroidGame;
 
 import asteroidGame.entity.Asteroid;
+import asteroidGame.entity.Chaser;
 import asteroidGame.entity.Spawn;
 import asteroidGame.entity.Shot;
 import asteroidGame.entity.Enemy;
 import asteroidGame.entity.Ship;
-import asteroidGame.entity.Entity;
 import java.applet.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -66,10 +66,6 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 		// I like .35 for acceleration, .98 for velocityDecay, and
 		// .1 for rotationalSpeed. They give the controls a nice feel.
 		ship = new Ship(250, 250, 0, .35, .98, .1, 0.33, new Color(250, 250, 250));
-
-		spawnone = new Spawn(100, 100, 40, Color.RED);
-		spawntwo = new Spawn(400, 100, 40, Color.BLUE);
-		spawnthree = new Spawn(250, 300, 40, Color.GREEN);
                 
 		//no shots on the screen at beginning of level
 		paused = false;
@@ -94,12 +90,15 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 			enemies.add(new Asteroid(Math.random() * dim.width,
 							Math.random() * dim.height, astRadius, minAstVel,
 							maxAstVel, astNumHits, astNumSplit, Asteroid.randomColor()));
+			enemies.add(new Chaser(Math.random() * dim.width,
+							Math.random() * dim.height, astRadius, minAstVel,
+							maxAstVel, astNumHits));
 	}
 
 	@Override
 	public void paint(Graphics gfx) {
 		g.setColor(Color.black);
-		g.fillRect(0, 0, 900, 900);
+		g.fillRect(0, 0, World.scrnWidth, World.scrnHeight);
 
 		// Draw all shots.
 		Iterator itr0 = shots.iterator();
@@ -113,10 +112,10 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 		// Draw all asteroids.
 		Iterator itr1 = enemies.iterator();
 		while (itr1.hasNext()) {
-			Enemy asteroid = (Enemy) itr1.next();
-			if (asteroid.shouldremove())
+			Enemy enemy = (Enemy) itr1.next();
+			if (enemy.shouldremove())
 				itr1.remove();
-			asteroid.draw(g);
+			enemy.draw(g);
 		}
 		
 		// Draw the spawners.
@@ -149,7 +148,13 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 		ArrayList<Enemy> temp = new ArrayList<>();
 		
 		for (Enemy enemy : enemies) {
-			enemy.move();
+			if (enemy instanceof Chaser) {
+				Chaser chaser = (Chaser) enemy;
+				chaser.move(ship);
+			} else {
+				enemy.move();
+			}
+			
 			if (enemy.collision(ship)) {
 				level --;
 				setUpNextLevel();
