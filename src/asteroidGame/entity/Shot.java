@@ -20,6 +20,8 @@ public class Shot extends Entity {
 			disappearing if it doesn't hit anything */
 		this.lifeLeft = lifeLeft * World.fps;
 		this.color = color;
+		
+		shape = new Rectangle.Double((int)(x), (int)(y), 3, 3);
 	}
 
 	public void move() {
@@ -39,6 +41,8 @@ public class Shot extends Entity {
 			y += scrnHeight;
 		else if (y > scrnHeight)
 			y -= scrnHeight;
+		
+		shape = new Rectangle.Double((int)(x), (int)(y), 3, 3);
 	}
 
 	public void draw(Graphics g) {

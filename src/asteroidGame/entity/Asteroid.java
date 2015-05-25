@@ -2,15 +2,20 @@ package asteroidGame.entity;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Shape;
+import java.awt.geom.Ellipse2D;
 import java.util.Random;
 
 public class Asteroid extends Enemy {
 	int numSplit;
+	Shape ellipse;
 
 	public Asteroid(double x, double y, double radius, double minVelocity, double maxVelocity, int hitsLeft, int numSplit, Color color) {
 		super(x, y, radius, minVelocity, maxVelocity, hitsLeft, color);
 		
 		this.numSplit = numSplit;
+		
+		shape = new Ellipse2D.Double((int)(x - radius + .5), (int)(y - radius + .5), (int)(2 * radius), (int)(2 * radius));
 	}
 	
 	public void move() {
@@ -29,6 +34,8 @@ public class Asteroid extends Enemy {
 			y += scrnHeight + 2 * radius;
 		else if (y > scrnHeight + radius)
 			y -= scrnHeight + 2 * radius;
+		
+		shape = new Ellipse2D.Double((int)(x - radius + .5), (int)(y - radius + .5), (int)(2 * radius), (int)(2 * radius));
 	}
 
 	public void draw(Graphics g) {

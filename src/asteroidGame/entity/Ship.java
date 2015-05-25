@@ -4,7 +4,7 @@ import asteroidGame.World;
 import java.awt.*;
 
 public class Ship extends Entity {
-	final double[] origXPts = {
+	final int[] origXPts = {
 			14, -10, -6, -10
 		}, origYPts = {
 			0, -8, 0, 8
@@ -20,7 +20,8 @@ public class Ship extends Entity {
 	int[] xPts, yPts, flameXPts, flameYPts;
 	double shotDelay, shotDelayLeft;
 	Color reed;
-
+	
+	Shape polyship;
 
 	public Ship(double x, double y, double angle, double acceleration, double velocityDecay, double rotationalSpeed, double shotDelay, Color col) {
 		super(x, y, angle, 6); // Radius is 6
@@ -43,6 +44,8 @@ public class Ship extends Entity {
 		this.shotDelay = shotDelay * World.fps; // Shots per second.
 		shotDelayLeft = 0; // ready to shoot
 		reed = col;
+		
+		shape = new Polygon(origXPts, origYPts, 4);
 	}
 
 	public void draw(Graphics g) {
@@ -74,7 +77,9 @@ public class Ship extends Entity {
 			g.setColor(reed);
 		else // draw the ship dark gray if the game is paused
 			g.setColor(Color.darkGray);
-		g.drawPolygon(xPts, yPts, 4); // 4 is number of points
+		
+		shape = new Polygon(xPts, yPts, 4);
+		g.drawPolygon((Polygon) shape); // 4 is number of points
 	}
 	public void colorReset(Color c) {
 		reed = c;
@@ -147,5 +152,4 @@ public class Ship extends Entity {
 		// Life in seconds.
 		return new Shot(x, y, angle, xVelocity, yVelocity, 5, reed);
 	}
-
 }

@@ -1,11 +1,13 @@
 package asteroidGame.entity;
 
 import java.awt.*;
+import java.awt.geom.Area;
 import asteroidGame.World;
 
 public abstract class Entity {
 	protected double x, y, angle, xVelocity, yVelocity, radius;
 	private boolean remove;
+	protected Shape shape;
 	
 	protected final int scrnWidth = World.scrnWidth;
 	protected final int scrnHeight = World.scrnHeight;
@@ -22,8 +24,13 @@ public abstract class Entity {
 	
 	public boolean collision(Entity entity) {
 		// Detects if any entity is in collision with any other entity.
+		Area s1 = new Area(this.shape);
+		Area s2 = new Area(entity.shape);	
 		
-		return Math.pow(entity.getRadius() + this.getRadius(), 2) > Math.pow(entity.getX() - this.getX(), 2) + Math.pow(entity.getY() - this.getY(), 2);
+		// Magic
+		s1.intersect(s2);
+		
+		return !s1.isEmpty();
 	}
 	
 	public void remove() {
