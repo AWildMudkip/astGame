@@ -15,45 +15,30 @@ public class Sound {
 	public Sound(String fileName) {
 		try {
 			clip = Applet.newAudioClip(Sound.class.getResource(fileName));
-		} catch (Exception e) {
-			System.out.println(e);
-		}
+		} catch (Exception e) {}
 	}
 	
 	public void playOnce() {
 		try {
-			new Thread() {
-				@Override
-				public void run() {
-					clip.play();
-				}
-			}.start();
+			clip.play();
 		} catch (Exception e) {}
 	}
 	
 	public void start() {
 		try {
-			new Thread() {
-				@Override
-				public void run() {
-					if (!started) {
-						started = true;
-						clip.loop();
-					}
-				}
-			}.start();
+			if (!started) {
+				started = true;
+				clip.loop();
+			}
 		} catch (Exception e) {}
 	}
 	
 	public void stop() {
 		try {
-			new Thread() {
-				@Override
-				public void run() {
-					clip.stop();
-					started = false;
-				}
-			}.start();
+			if (started) {
+				started = false;
+				clip.stop();
+			}
 		} catch (Exception e) {}
 	}
 	

@@ -1,7 +1,5 @@
 package asteroidGame;
 
-import asteroidGame.entity.Asteroid;
-
 import asteroidGame.entity.*;
 import java.applet.*;
 import java.awt.*;
@@ -11,46 +9,42 @@ import java.util.Iterator;
 
 public class AsteroidGame extends Applet implements Runnable, KeyListener {
 
+	// System globals.
 	private static final long serialVersionUID = 1L;
 	Thread thread;
 	Dimension dim;
 	Image img;
 	Graphics g;
-
 	long endTime, startTime, framePeriod;
 
-	Ship ship;
-	boolean paused; // True if the game is paused. Enter is the pause key
-
-	Spawn spawnone, spawntwo, spawnthree;
-
+	// Player variables.
+	int level, lives, score;
+	boolean paused; // True if game is paused. Enter is the the pause key.
 	boolean shooting;
-
+	Ship ship = null; // Initialize ship.
+	
+	// Ship variables.
+	double ship_accel, ship_decay, ship_rotspeed, ship_firerate;
+	
+	// Asteroid variables.
+	double ast_radius, ast_minVel, ast_maxVel;
+	int ast_numHits, ast_numSplit;
+	
+	// Virus variables.
+	int vir_spikes, vir_innerr, vir_outerr, vir_life;
+	double vir_minVel, vir_maxVel;
+	
+	// Global entity arrays.
 	ArrayList<Enemy> enemies = new ArrayList<>();
 	ArrayList<Shot> shots = new ArrayList<>();
 	ArrayList<Spawn> spawners = new ArrayList<>();
-	
-	double astRadius, minAstVel, maxAstVel; //values used to create
-	//asteroids
-	int astNumHits, astNumSplit;
-
-	int level; //the current level number
-	int lives; // Are you a cat? Do you have 9 lives? No? Great.
-	int score; // The score
 
 	@Override
 	public void init() {
 		resize(World.scrnWidth, World.scrnHeight);
-
-		level = 0; //will be incremented to 1 when first level is set up
-		lives = 3;
-		score = 0;
 		
-		astRadius = 30; //values used to create the asteroids
-		minAstVel = .5;
-		maxAstVel = 5;
-		astNumHits = 3;
-		astNumSplit = 2;
+		reset();
+		
 		endTime = 0;
 		startTime = 0;
 		framePeriod = World.framePeriod;
@@ -61,13 +55,46 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 		thread = new Thread(this);
 		thread.start();
 	}
+	
+	public void reset() {
+		// Basic configuation.
+		level = 0;
+		lives = 3;
+		score = 0;
+		ship = null;
+		
+		// Ship variables.
+		ship_accel = 0.35;
+		ship_decay = 0.98;
+		ship_rotspeed = 0.1;
+		ship_firerate = 0.33;
+		
+		// Asteroid configuation.
+		ast_radius = 30;
+		ast_minVel = 0.3;
+		ast_maxVel = 1;
+		ast_numHits = 3;
+		ast_numSplit = 2;
+		
+		// Virus configuation.
+		vir_spikes = 5;
+		vir_innerr = 5;
+		vir_outerr = 15;
+		vir_life = 2;
+		vir_minVel = 0.5;
+		vir_maxVel = 1;
+		
+	}
 
 	public void setUpNextLevel() { //start new level with one more asteroid
 		level++;
 		// create a new, inactive ship centered on the screen
 		// I like .35 for acceleration, .98 for velocityDecay, and
 		// .1 for rotationalSpeed. They give the controls a nice feel.
-		ship = new Ship(250, 250, 0, .35, .98, .1, 0.33, new Color(250, 250, 250));
+		if (ship == null) {
+			resetShip();
+			ship.setActive(false);
+		}
                 
 		//no shots on the screen at beginning of level
 		paused = true;
@@ -89,15 +116,15 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 		
 		//create asteroids in random spots on the screen
 		for (int i = 0; i < level; i++) {
-			enemies.add(new Asteroid(Math.random() * dim.width,
-							Math.random() * dim.height, astRadius, minAstVel,
-							maxAstVel, astNumHits, astNumSplit, Asteroid.randomColor()));
-			enemies.add(new Virus(Math.random() * dim.width, Math.random() * dim.height, minAstVel, maxAstVel));
+			enemies.add(new Asteroid(Math.random() * World.scrnWidth, Math.random() * World.scrnHeight,
+							ast_radius, ast_minVel, ast_maxVel, ast_numHits, ast_numSplit, Asteroid.randomColor()));
+			enemies.add(new Virus(Math.random() * World.scrnWidth, Math.random() * World.scrnHeight,
+							vir_minVel, vir_maxVel, vir_innerr, vir_outerr, vir_life, vir_spikes));
 		}	
 	}
 	
 	public void resetShip() {	
-		ship = new Ship(250, 250, 0, .35, .98, .1, 0.33, new Color(250, 250, 250));
+		ship = new Ship(World.scrnWidth / 2, World.scrnHeight / 2, 0, ship_accel, ship_decay, ship_rotspeed, ship_firerate, new Color(250, 250, 250));
 		ship.setActive(true);
 		ship.blink();
 	}
@@ -170,7 +197,9 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 			
 			if (enemy.collision(ship) && !ship.isInvincible()) {
 				lives --;
-				if (lives == 0) {					
+				if (lives == 0) {
+					reset();
+					setUpNextLevel();
 					break;
 				} else {
 					resetShip();
@@ -187,7 +216,7 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 						asteroid.playSound(); // Boom!
 						if (enemy.getHitsLeft() > 1) {
 							for (int k = 0; k < asteroid.getNumSplit(); k++)
-								temp.add(asteroid.createSplitAsteroid(minAstVel, maxAstVel));
+								temp.add(asteroid.createSplitAsteroid(ast_minVel, ast_maxVel));
 						}
 						score += enemy.getScore();
 						enemy.remove();

@@ -8,16 +8,17 @@ import java.util.Random;
 import sl.shapes.StarPolygon;
 
 public class Virus extends Enemy {
-    private final static int numProjectiles = 10; // Match spikes.
-	private final static int points = 400; // Static score for blowing one up.
-	private final static int life = 5;
-	private final static int innerRadius = 15, outerRadius = 20, spikes = 10;
-	private final static int rotation = 5;
+	private final int innerRadius, outerRadius, spikes;
+	private final static double rotation = Math.PI / 100;
 	
-    public Virus(double x, double y, double minVelocity, double maxVelocity) {
-		super(x, y, minVelocity, maxVelocity, 2 * Math.PI * Math.random(), life, Color.PINK, points);
+    public Virus(double x, double y, double minVelocity, double maxVelocity, int innerRadius, int outerRadius, int life, int spikes) {
+		super(x, y, minVelocity, maxVelocity, 2 * Math.PI * Math.random(), life, Color.PINK, spikes * 40);
 		
-		shape = new StarPolygon((int) x, (int) y, outerRadius, innerRadius, spikes, 0);
+		this.innerRadius = innerRadius;
+		this.outerRadius = outerRadius;
+		this.spikes = spikes;
+		
+		shape = new StarPolygon((int) x, (int) y, outerRadius, innerRadius, spikes, angle);
     }
 	
 	@Override
@@ -37,8 +38,8 @@ public class Virus extends Enemy {
 		else if (y > scrnHeight + outerRadius)
 			y -= scrnHeight + 2 * outerRadius;
 		
-		if (angle >= 360)
-			angle -= 360;
+		if (angle >= 2 * Math.PI)
+			angle -= 2 * Math.PI;
 		
 		shape = new StarPolygon((int) x, (int) y, outerRadius, innerRadius, spikes, angle);
     }
@@ -57,9 +58,9 @@ public class Virus extends Enemy {
     public ArrayList<Shrapnel> virusShrapnels()
     {
 		ArrayList<Shrapnel> shrapnels = new ArrayList<>();
-		double a = 360 / numProjectiles;
-        for (int i = 0; i < numProjectiles; i++) {
-			shrapnels.add(new Shrapnel(x, y, velocity, velocity, i * a + this.getAngle(), color));
+		double a = 2 * Math.PI / spikes;
+        for (int i = 0; i < spikes; i++) {
+			shrapnels.add(new Shrapnel(x, y, velocity, velocity, a * i + angle, color));
 		}
 		return shrapnels;
     }   
