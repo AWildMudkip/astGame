@@ -8,16 +8,14 @@ import java.util.Random;
 import sl.shapes.StarPolygon;
 
 public class Virus extends Enemy {
-    private int numProjectiles, angle;
+    private int numProjectiles;
 	private final static int points = 400; // Static score for blowing one up.
 	private final static int life = 5;
 	private final static int innerRadius = 15, outerRadius = 20, spikes = 10;
 	private final static int rotation = 5;
 	
     public Virus(double x, double y, double minVelocity, double maxVelocity) {
-		super(x, y, minVelocity, maxVelocity, life, Color.PINK, points);
-
-		this.angle = 0;
+		super(x, y, minVelocity, maxVelocity, 2 * Math.PI * Math.random(), life, Color.PINK, points);
 		
 		shape = new StarPolygon((int) x, (int) y, outerRadius, innerRadius, spikes, 0);
     }
@@ -38,8 +36,8 @@ public class Virus extends Enemy {
 		else if (y > scrnHeight + outerRadius)
 			y -= scrnHeight + 2 * outerRadius;
 		
-		if (angle > 360)
-			angle = 360 - angle;
+		if (angle >= 360)
+			angle -= 360;
 		
 		shape = new StarPolygon((int) x, (int) y, outerRadius, innerRadius, spikes, angle);
     }

@@ -11,7 +11,7 @@ public class Asteroid extends Enemy {
 	private final static int points = 100; // Static score for blowing one up.
 
 	public Asteroid(double x, double y, double radius, double minVelocity, double maxVelocity, int hitsLeft, int numSplit, Color color) {
-		super(x, y, minVelocity, maxVelocity, hitsLeft, color, points);
+		super(x, y, minVelocity, maxVelocity, 2 * Math.PI * Math.random(), hitsLeft, color, points);
 		
 		this.numSplit = numSplit;
 		this.radius = radius;
