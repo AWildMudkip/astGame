@@ -17,7 +17,7 @@ public class Spawn extends Entity {
     }
     
     public void draw(Graphics g) {
-        g.setColor(this.color);
+        g.setColor(color);
         g.drawOval((int)(this.x - this.radius + .5), (int)(this.y - this.radius + .5), (int)(2 * this.radius), (int)(2 * this.radius));
     }
 	

@@ -6,6 +6,7 @@ import asteroidGame.entity.Spawn;
 import asteroidGame.entity.Shot;
 import asteroidGame.entity.Enemy;
 import asteroidGame.entity.Ship;
+import asteroidGame.entity.Virus;
 import java.applet.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -93,11 +94,12 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 		spawners.add(new Spawn(400, 100, 40, Color.BLUE));
 		
 		//create asteroids in random spots on the screen
-		for (int i = 0; i < level; i++)
+		for (int i = 0; i < level; i++) {
 			enemies.add(new Asteroid(Math.random() * dim.width,
 							Math.random() * dim.height, astRadius, minAstVel,
 							maxAstVel, astNumHits, astNumSplit, Asteroid.randomColor()));
-			
+			enemies.add(new Virus(Math.random() * dim.width, Math.random() * dim.height, minAstVel, maxAstVel));
+		}	
 	}
 	
 	public void resetShip() {	
@@ -163,6 +165,9 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 		for (Enemy enemy : enemies) {
 			if (enemy instanceof Asteroid) {
 				enemy = (Asteroid) enemy;
+				enemy.move();
+			} else if (enemy instanceof Virus) {
+				enemy = (Virus) enemy;
 				enemy.move();
 			}
 			

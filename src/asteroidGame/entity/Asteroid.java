@@ -2,13 +2,12 @@ package asteroidGame.entity;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
 import java.util.Random;
 
 public class Asteroid extends Enemy {
-	private int numSplit;
-	private double radius;
+	private final int numSplit;
+	private final double radius;
 	private final static int points = 100; // Static score for blowing one up.
 
 	public Asteroid(double x, double y, double radius, double minVelocity, double maxVelocity, int hitsLeft, int numSplit, Color color) {
@@ -20,6 +19,7 @@ public class Asteroid extends Enemy {
 		shape = new Ellipse2D.Double((int)(x - radius + .5), (int)(y - radius + .5), (int)(2 * radius), (int)(2 * radius));
 	}
 	
+	@Override
 	public void move() {
 		x += xVelocity; //move the asteroid
 		y += yVelocity;
@@ -40,6 +40,7 @@ public class Asteroid extends Enemy {
 		shape = new Ellipse2D.Double((int)(x - radius + .5), (int)(y - radius + .5), (int)(2 * radius), (int)(2 * radius));
 	}
 
+	@Override
 	public void draw(Graphics g) {
 		g.setColor(color); // set color for the asteroid
 		// draw the asteroid centered at (x,y)
