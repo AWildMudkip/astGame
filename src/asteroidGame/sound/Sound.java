@@ -12,7 +12,7 @@ public class Sound {
 		} catch (Exception e) {}
 	}
 	
-	public void play() {
+	public void playOnce() {
 		try {
 			new Thread() {
 				@Override
@@ -22,4 +22,27 @@ public class Sound {
 			}.start();
 		} catch (Exception e) {}
 	}
+	
+	public void start() {
+		try {
+			new Thread() {
+				@Override
+				public void run() {
+					clip.loop();
+				}
+			}.start();
+		} catch (Exception e) {}
+	}
+	
+	public void stop() {
+		try {
+			new Thread() {
+				@Override
+				public void run() {
+					clip.stop();
+				}
+			}.start();
+		} catch (Exception e) {}
+	}
+	
 }

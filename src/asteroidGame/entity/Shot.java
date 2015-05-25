@@ -1,19 +1,18 @@
 package asteroidGame.entity;
 
 import asteroidGame.World;
-import asteroidGame.sound.Sound;
 import java.awt.*;
 
 public class Shot extends Entity {
 	final double shotSpeed = 500 / World.fps; // Frames per second.
-	private static final Sound shotSound = new Sound("laser.wav");
 	double lifeLeft;
 	Color color;
 
 	public Shot(double x, double y, double angle, double shipXVel, double shipYVel, double lifeLeft, Color color) {
 		super(x, y, angle);
 		
-		shotSound.play();
+		// Play sound.
+		this.playSound();
 		
 		/*	Add the velocity of the ship to the velocity the shot velocity
 			(so the shot's velocity is relative to the ship's) */
@@ -57,5 +56,9 @@ public class Shot extends Entity {
 	
 	public Color getColor() {
 		return this.color;
+	}
+	
+	public final void playSound() {
+		shotSound.playOnce();
 	}
 }

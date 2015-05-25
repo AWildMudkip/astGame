@@ -2,8 +2,6 @@ package asteroidGame.entity;
 
 import asteroidGame.World;
 import java.awt.*;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class Ship extends Entity {
 	final int[] origXPts = {
@@ -158,10 +156,9 @@ public class Ship extends Entity {
 	}
 
 	public boolean canShoot() {
-		if (shotDelayLeft > 0) //checks to see if the ship is ready to
-			return false; //shoot again yet or needs to wait longer
-		else
-			return true;
+		return shotDelayLeft <= 0;
+		//checks to see if the ship is ready to
+		//shoot again yet or needs to wait longer
 	}
 	public Shot shoot() {
 		shotDelayLeft = shotDelay; 
@@ -172,5 +169,13 @@ public class Ship extends Entity {
 	
 	public void blink() {
 		flashleft = 3 * World.fps;
+	}
+	
+	public void startSound() {
+		thrusterSound.start();
+	}
+	
+	public void stopSound() {
+		thrusterSound.stop();
 	}
 }

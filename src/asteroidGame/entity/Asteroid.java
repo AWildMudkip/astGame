@@ -80,4 +80,8 @@ public class Asteroid extends Enemy {
 	public int getNumSplit() {
 		return this.numSplit;
 	}
+	
+	public final void playSound() {
+		asteroidSound.playOnce();
+	}
 }
