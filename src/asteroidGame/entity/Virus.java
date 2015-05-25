@@ -8,7 +8,7 @@ import java.util.Random;
 import sl.shapes.StarPolygon;
 
 public class Virus extends Enemy {
-    private int numProjectiles;
+    private final static int numProjectiles = 10; // Match spikes.
 	private final static int points = 400; // Static score for blowing one up.
 	private final static int life = 5;
 	private final static int innerRadius = 15, outerRadius = 20, spikes = 10;
@@ -19,6 +19,7 @@ public class Virus extends Enemy {
 		
 		shape = new StarPolygon((int) x, (int) y, outerRadius, innerRadius, spikes, 0);
     }
+	
 	@Override
     public void move()
     {
@@ -53,8 +54,13 @@ public class Virus extends Enemy {
 		hitsLeft --;
 	}
 	
-    public void virusExplode()
+    public ArrayList<Shrapnel> virusShrapnels()
     {
-        
+		ArrayList<Shrapnel> shrapnels = new ArrayList<>();
+		double a = 360 / numProjectiles;
+        for (int i = 0; i < numProjectiles; i++) {
+			shrapnels.add(new Shrapnel(x, y, velocity, velocity, i * a, color));
+		}
+		return shrapnels;
     }   
 }

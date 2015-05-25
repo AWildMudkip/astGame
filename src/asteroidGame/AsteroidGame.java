@@ -6,6 +6,7 @@ import asteroidGame.entity.Spawn;
 import asteroidGame.entity.Shot;
 import asteroidGame.entity.Enemy;
 import asteroidGame.entity.Ship;
+import asteroidGame.entity.Shrapnel;
 import asteroidGame.entity.Virus;
 import java.applet.*;
 import java.awt.*;
@@ -122,7 +123,7 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 			shot.draw(g);
 		}
 	
-		// Draw all asteroids.
+		// Draw all enemies.
 		Iterator itr1 = enemies.iterator();
 		while (itr1.hasNext()) {
 			Enemy enemy = (Enemy) itr1.next();
@@ -169,6 +170,9 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 			} else if (enemy instanceof Virus) {
 				enemy = (Virus) enemy;
 				enemy.move();
+			} else if (enemy instanceof Shrapnel) {
+				enemy = (Shrapnel) enemy;
+				enemy.move();
 			}
 			
 			if (enemy.collision(ship) && !ship.isInvincible()) {
@@ -194,16 +198,28 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 						score += enemy.getScore();
 						enemy.remove();
 					} 
+					
 					// This takes care of the virus enemy type.
 					else if (enemy instanceof Virus) {
 						Virus virus = (Virus) enemy;
 						virus.hit();
 						if (virus.getHitsLeft() == 0) {
 							virus.remove();
-							virus.virusExplode();
+							temp.addAll(virus.virusShrapnels());
 							score += virus.getScore();
 						}
 					}
+					
+					// This handles shrapnels from a virus.
+					else if (enemy instanceof Shrapnel) {
+						Shrapnel shrapnel = (Shrapnel) enemy;
+						shrapnel.hit();
+						if (shrapnel.getHitsLeft() == 0) {
+							shrapnel.remove();
+							score += shrapnel.getScore();
+						}
+					}
+					
 					break;
 				}
 			}
