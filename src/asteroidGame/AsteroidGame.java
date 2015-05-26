@@ -134,8 +134,14 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 	}
 	
 	public void resetShip() {
-		ship_accel= .20;
-		ship = new Ship(World.scrnWidth / 2, World.scrnHeight / 2, 0, ship_accel, ship_decay, ship_rotspeed, ship_firerate, new Color(250, 250, 250));
+		int whereSpawn=(int)((Math.random()*3)+1);
+        ship_accel=.20;
+		if(whereSpawn==1)
+		{ship = new Ship(World.scrnWidth / 4, World.scrnHeight / 4, 0, ship_accel, ship_decay, ship_rotspeed, ship_firerate, new Color(250, 0, 0));}
+		if(whereSpawn==2)
+		{ship=new Ship(World.scrnWidth*1/2, World.scrnHeight*3/4, 0, ship_accel, ship_decay, ship_rotspeed, ship_firerate, new Color(0, 255, 0));}
+		if(whereSpawn==3)
+		{ship=new Ship(World.scrnWidth*3/4, World.scrnHeight/4, 0, ship_accel, ship_decay, ship_rotspeed, ship_firerate, new Color(0, 0, 255));}
 		ship.setActive(true);
 		ship.blink();
 	}
