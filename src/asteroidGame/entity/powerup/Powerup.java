@@ -12,6 +12,7 @@ public class Powerup extends Entity {
 	
 	BufferedImage img;
 	int width, height;
+	int life;
 	
 	public Powerup(double x, double y, String img) {
 		super(x, y, 0);
@@ -29,6 +30,10 @@ public class Powerup extends Entity {
 
 	@Override
 	public void draw(Graphics g) {
+		life --;
+		if (life == 0) {
+			this.remove();
+		}
 		g.drawImage(img, (int) x, (int) y, null);
 	}
 }
