@@ -170,8 +170,6 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 	}
 	
 	public void step() {
-		entities.addAll(pending);
-		pending = new ArrayList<>();
 		
 		List<Shot> shots = entities.stream().filter(e -> e instanceof Shot).map(e -> (Shot) e).collect(Collectors.toList());
 		List<Enemy> enemies = entities.stream().filter(e -> e instanceof Enemy).map(e -> (Enemy) e).collect(Collectors.toList());
@@ -279,6 +277,9 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 		for (;;) {
 			startTime = System.currentTimeMillis();
 
+			entities.addAll(pending);
+			pending = new ArrayList<>();
+			
 			//start next level when all asteroids are destroyed
 			if (entities.stream().filter(e -> e instanceof Enemy).count() == 0)
 				setUpNextLevel();
