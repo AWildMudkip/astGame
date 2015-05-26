@@ -97,7 +97,7 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 
 	public void setUpNextLevel() { //start new level with one more asteroid
 		level++;
-                ship_accel=.20;
+		ship_accel=.20;
 		// create a new, inactive ship centered on the screen
 		// I like .35 for acceleration, .98 for velocityDecay, and
 		// .1 for rotationalSpeed. They give the controls a nice feel.
@@ -134,7 +134,7 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 	}
 	
 	public void resetShip() {
-                double ship_accel=.20;
+		ship_accel= .20;
 		ship = new Ship(World.scrnWidth / 2, World.scrnHeight / 2, 0, ship_accel, ship_decay, ship_rotspeed, ship_firerate, new Color(250, 250, 250));
 		ship.setActive(true);
 		ship.blink();
