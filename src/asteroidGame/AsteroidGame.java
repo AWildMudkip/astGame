@@ -150,7 +150,8 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 			entity.draw(g);
 		}
 		
-		ship.draw(g);
+		if (ship != null)
+			ship.draw(g);
 	
 		g.setColor(Color.cyan); //Display level number in top left corner
 		g.drawString("Level " + level, 20, 20);
