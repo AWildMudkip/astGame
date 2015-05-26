@@ -30,7 +30,8 @@ public class Powerup extends Entity {
 
 	@Override
 	public void draw(Graphics g) {
-		life --;
+		if(life>0)
+                    life--;
 		if (life == 0) {
 			this.remove();
 		}
