@@ -37,7 +37,7 @@ public class Ship extends Entity {
 		turningLeft = false; // not turning
 		turningRight = false;
 		accelerating = false; // not accelerating
-		active = false; // start off paused
+		active = true;
 
 		xPts = new int[4]; // allocate space for the arrays
 		yPts = new int[4];
@@ -181,5 +181,9 @@ public class Ship extends Entity {
 	
 	public void stopSound() {
 		Sound.thrusterSound.stop();
+	}
+	
+	public void setAcceleration(double acceleration) {
+		this.acceleration = acceleration;
 	}
 }

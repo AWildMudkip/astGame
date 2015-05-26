@@ -73,7 +73,7 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 		ship = null;
 		
 		// Ship variables.
-		ship_accel = 0.35;
+		ship_accel = 0.20;
 		ship_decay = 0.98;
 		ship_rotspeed = 0.1;
 		ship_firerate = 0.33;
@@ -128,6 +128,7 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 							ast_radius, ast_minVel, ast_maxVel, ast_numHits, ast_numSplit, Asteroid.randomColor()));
 			entities.add(new Virus(Math.random() * World.scrnWidth, Math.random() * World.scrnHeight,
 							vir_minVel, vir_maxVel, vir_innerr, vir_outerr, vir_life, vir_spikes));
+			entities.add(new SpeedUp(Math.random() * World.scrnWidth, Math.random() * World.scrnHeight));
 		}	
 	}
 	
@@ -192,6 +193,11 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 			if (powerup.collision(ship)) {
 				if (powerup instanceof LifeUp) {
 					this.lives ++;
+					powerup.remove();
+				}
+				else if (powerup instanceof SpeedUp) {
+					this.ship_accel += 0.15;
+					ship.setAcceleration(this.ship_accel);
 					powerup.remove();
 				}
 			}
