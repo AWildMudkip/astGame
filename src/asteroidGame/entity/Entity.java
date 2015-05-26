@@ -64,4 +64,6 @@ public abstract class Entity {
 		
 		return this.remove;
 	}
+	
+	public void draw(Graphics g) {}
 }

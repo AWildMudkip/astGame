@@ -1,4 +1,4 @@
-package asteroidGame.entity;
+package asteroidGame.entity.enemy;
 
 import asteroidGame.World;
 import java.awt.Color;

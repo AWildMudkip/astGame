@@ -1,11 +1,15 @@
 package asteroidGame;
 
+import asteroidGame.entity.enemy.*;
+import asteroidGame.entity.powerup.*;
 import asteroidGame.entity.*;
 import java.applet.*;
+import java.util.List;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.stream.Collectors;
 
 public class AsteroidGame extends Applet implements Runnable, KeyListener {
 
@@ -34,15 +38,15 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 	int vir_spikes, vir_innerr, vir_outerr, vir_life;
 	double vir_minVel, vir_maxVel;
 	
-	// Global entity arrays.
-	ArrayList<Enemy> enemies = new ArrayList<>();
-	ArrayList<Shot> shots = new ArrayList<>();
-	ArrayList<Spawn> spawners = new ArrayList<>();
+	// Global entity and temporaryarrays.
+	List<Entity> entities = new ArrayList<>();
+	List<Entity> pending = new ArrayList<>();
 
 	@Override
 	public void init() {
 		resize(World.scrnWidth, World.scrnHeight);
 		
+		preload();
 		reset();
 		
 		endTime = 0;
@@ -54,6 +58,11 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 		g = img.getGraphics();
 		thread = new Thread(this);
 		thread.start();
+	}
+	
+	public void preload() {
+		/* Instantize loading. */
+		LifeUp lifeUp = new LifeUp(Math.random() * World.scrnWidth, Math.random() * World.scrnHeight);
 	}
 	
 	public void reset() {
@@ -105,20 +114,19 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 		//one is deleted). The level number is equal to the
 		//number of asteroids at it's start.
 		
-		enemies = new ArrayList<>();
-		shots = new ArrayList<>();
-		spawners = new ArrayList<>();
+		entities = new ArrayList<>();
+		pending = new ArrayList<>();
 		
 		// Add the spawners!
-		spawners.add(new Spawn(100, 100, 40, Color.RED));
-		spawners.add(new Spawn(250, 300, 40, Color.GREEN));
-		spawners.add(new Spawn(400, 100, 40, Color.BLUE));
+		entities.add(new Spawn(World.scrnWidth / 4, World.scrnHeight / 4, 40, Color.RED));
+		entities.add(new Spawn(World.scrnWidth * 1/2, World.scrnHeight * 3/4, 40, Color.GREEN));
+		entities.add(new Spawn(World.scrnWidth * 3/4, World.scrnHeight / 4, 40, Color.BLUE));
 		
 		//create asteroids in random spots on the screen
 		for (int i = 0; i < level; i++) {
-			enemies.add(new Asteroid(Math.random() * World.scrnWidth, Math.random() * World.scrnHeight,
+			entities.add(new Asteroid(Math.random() * World.scrnWidth, Math.random() * World.scrnHeight,
 							ast_radius, ast_minVel, ast_maxVel, ast_numHits, ast_numSplit, Asteroid.randomColor()));
-			enemies.add(new Virus(Math.random() * World.scrnWidth, Math.random() * World.scrnHeight,
+			entities.add(new Virus(Math.random() * World.scrnWidth, Math.random() * World.scrnHeight,
 							vir_minVel, vir_maxVel, vir_innerr, vir_outerr, vir_life, vir_spikes));
 		}	
 	}
@@ -134,31 +142,16 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 		g.setColor(Color.black);
 		g.fillRect(0, 0, World.scrnWidth, World.scrnHeight);
 
-		// Draw all shots.
-		Iterator itr0 = shots.iterator();
-		while (itr0.hasNext()) {
-			Shot shot = (Shot) itr0.next();
-			if (shot.shouldremove())
-				itr0.remove();
-			shot.draw(g);
-		}
-	
-		// Draw all enemies.
-		Iterator itr1 = enemies.iterator();
-		while (itr1.hasNext()) {
-			Enemy enemy = (Enemy) itr1.next();
-			if (enemy.shouldremove())
-				itr1.remove();
-			enemy.draw(g);
+		Iterator itr = entities.iterator();
+		while (itr.hasNext()) {
+			Entity entity = (Entity) itr.next();
+			if (entity.shouldremove())
+				itr.remove();
+			entity.draw(g);
 		}
 		
-		// Draw the spawners.
-		for (Spawn spawn : spawners) {
-			spawn.draw(g);
-		}
-
-		ship.draw(g); // Draw the ship.
-
+		ship.draw(g);
+	
 		g.setColor(Color.cyan); //Display level number in top left corner
 		g.drawString("Level " + level, 20, 20);
 		g.drawString("Score " + score, 120, 20);
@@ -173,16 +166,37 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 	}
 	
 	public void step() {
+		entities.addAll(pending);
+		pending = new ArrayList<>();
+		
+		List<Shot> shots = entities.stream().filter(e -> e instanceof Shot).map(e -> (Shot) e).collect(Collectors.toList());
+		List<Enemy> enemies = entities.stream().filter(e -> e instanceof Enemy).map(e -> (Enemy) e).collect(Collectors.toList());
+		
 		// Update ship.
 		ship.move();
 		
-		for (Shot shot : shots) {
+		// Update shots.
+		shots.stream().forEach((shot) -> {
 			shot.move();
-		}
+		});
 		
-		// Update asteroids.
-		ArrayList<Enemy> temp = new ArrayList<>();
+		// Update spawners.
+		entities.stream().filter(e -> e instanceof Spawn).map(e -> (Spawn) e).forEach((spawn) ->{
+			if (spawn.collision(ship))
+				ship.colorReset(spawn.getColor());
+		});
 		
+		// Update powerups.
+		entities.stream().filter(e -> e instanceof Powerup).map(e -> (Powerup) e).forEach((powerup) -> {
+			if (powerup.collision(ship)) {
+				if (powerup instanceof LifeUp) {
+					this.lives ++;
+					powerup.remove();
+				}
+			}
+		});
+		
+		// Update enemies.		
 		for (Enemy enemy : enemies) {
 			if (enemy instanceof Asteroid) {
 				enemy = (Asteroid) enemy;
@@ -216,7 +230,7 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 						asteroid.playSound(); // Boom!
 						if (enemy.getHitsLeft() > 1) {
 							for (int k = 0; k < asteroid.getNumSplit(); k++)
-								temp.add(asteroid.createSplitAsteroid(ast_minVel, ast_maxVel));
+								pending.add(asteroid.createSplitAsteroid(ast_minVel, ast_maxVel));
 						}
 						score += enemy.getScore();
 						enemy.remove();
@@ -228,7 +242,8 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 						virus.hit();
 						if (virus.getHitsLeft() == 0) {
 							virus.remove();
-							temp.addAll(virus.virusShrapnels());
+							pending.addAll(virus.virusShrapnels());
+							pending.add(new LifeUp(virus.getX(), virus.getY()));
 							score += virus.getScore();
 						}
 					}
@@ -247,15 +262,7 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 				}
 			}
 		}
-		
-		// Join temporary into current.
-		enemies.addAll(temp);
-		
-		// Check the spawners.
-		for (Spawn spawn : spawners) {
-			if (spawn.collision(ship))
-				ship.colorReset(spawn.getColor());
-		}
+	
 	}
 	
 	@Override
@@ -264,7 +271,7 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 			startTime = System.currentTimeMillis();
 
 			//start next level when all asteroids are destroyed
-			if (enemies.size() <= 0)
+			if (entities.stream().filter(e -> e instanceof Enemy).count() == 0)
 				setUpNextLevel();
 
 			if (!paused) {
@@ -272,7 +279,7 @@ public class AsteroidGame extends Applet implements Runnable, KeyListener {
 			
 				if (shooting && ship.canShoot()) {
 					// Add a shot.
-					shots.add(ship.shoot());
+					pending.add(ship.shoot());
 				}
 			}
 

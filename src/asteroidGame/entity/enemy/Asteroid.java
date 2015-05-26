@@ -1,4 +1,4 @@
-package asteroidGame.entity;
+package asteroidGame.entity.enemy;
 
 import asteroidGame.sound.Sound;
 import java.awt.Color;

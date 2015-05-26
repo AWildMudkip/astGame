@@ -1,5 +1,6 @@
-package asteroidGame.entity;
+package asteroidGame.entity.enemy;
 
+import asteroidGame.entity.Entity;
 import java.awt.*;
 
 public class Enemy extends Entity {
@@ -38,5 +39,7 @@ public class Enemy extends Entity {
 	}
 	
 	public void move() {}
+	
+	@Override
 	public void draw(Graphics g) {}
 }
